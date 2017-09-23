@@ -8,7 +8,7 @@ takes the optional arguments:
   * max number of pages to crawl
   * entry url
 
-Usage: ./PornhubComments.py -c 10 -v 50 -p 5 -e https://www.pornhub.com/view_video.php?viewkey=ph59aa47fc1d728
+Usage: ./PornhubCommentsStandalone.py -c 10 -v 50 -p 5 -e https://www.pornhub.com/view_video.php?viewkey=ph59aa47fc1d728
 
 # Discord Cog (In the Folder)
 Theres also a discord cog, this is tested working with Red and NotSoBot. 
