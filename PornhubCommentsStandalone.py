@@ -11,7 +11,7 @@ def crawl(max_comments=10, max_pages=10, votes_threshold=50, entry_url="https://
     
     page_links, good_comments, comments = get_good_comments(entry_url, max_comments, good_comments, votes_threshold) 
     
-    while comments < max_comments or len(explored_pages) < max_pages:
+    while comments < max_comments and len(explored_pages) < max_pages:
         url =  page_links.pop()
         
         while url in explored_pages:
