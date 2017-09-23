@@ -10,6 +10,7 @@ takes the optional arguments:
 
 Usage: ./PornhubComments.py -c 10 -v 50 -p 5 -e https://www.pornhub.com/view_video.php?viewkey=ph59aa47fc1d728
 
+# Discord Cog (In the Folder)
 Theres also a discord cog, this is tested working with Red and NotSoBot. 
 
 You can use the !cog repo command to pull it into Red.
