@@ -18,7 +18,7 @@ You can use the !cog repo command to pull it into Red.
 ### Discord Cog Issues with Python3.6 ###
 As of Python 3.6 aiohttp errors out when multiple requests are made concurrently, so don't spam it.
 
-Seems to be stable in Python 3.5.3, occassioanly spits a pause_rerading() error, but does not affect output.
+Seems to be stable in Python 3.5.3, occassioanly spits a pause_reading() after closed error, but does not affect output.
 
 
 
