@@ -3,13 +3,10 @@ Pornhub Comment scraper for discord.py
 
 takes the optional arguments:
 
-comment count
-
-minimum votes
-
-max number of pages to crawl
-
-entry url
+  * comment count
+  * minimum votes
+  * max number of pages to crawl
+  * entry url
 
 Usage: ./PornhubComments.py -c 10 -v 50 -p 5 -e https://www.pornhub.com/view_video.php?viewkey=ph59aa47fc1d728
 
