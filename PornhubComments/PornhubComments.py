@@ -57,6 +57,7 @@ class PornhubComments:
                     embed_text = ""
                     for votes, comment in good_comments[url].items():
                         if (char_count + (len(votes) + len(comment))) < 2000 and fields < 25:
+                            char_count += (len(votes) + len(comment))
                             embed_text += "{}: {}\n".format(votes, comment)
                         else:
                             embed.add_field(name=url, value=embed_text)
