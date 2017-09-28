@@ -43,41 +43,54 @@ class PornhubComments:
                 
                 good_comments = {**good_comments, **new_good_comments}
 
-            embed = discord.Embed(colour=discord.Colour(0xc27c0e), url="https://pornhub.com")
+            async def create_embed(good_comments):
+                embed = discord.Embed(colour=discord.Colour(0xc27c0e), url="https://pornhub.com")
 
-            embed.set_image(url="https://ci.phncdn.com/www-static/images/pornhub_logo_straight.png?cache=2017092101")
-            embed.set_thumbnail(url="https://ci.phncdn.com/www-static/images/pornhub_logo_straight.png?cache=2017092101")
-            embed.set_footer(text="Pornhub Comments by STIGYFishh")
-            
-            for url in good_comments.keys():
-                embed_text = ""
-                for votes, comment in good_comments[url].items():
-                    embed_text += "{}: {}\n".format(votes, comment)
+                embed.set_image(url="https://ci.phncdn.com/www-static/images/pornhub_logo_straight.png?cache=2017092101")
+                embed.set_thumbnail(url="https://ci.phncdn.com/www-static/images/pornhub_logo_straight.png?cache=2017092101")
+                embed.set_footer(text="Pornhub Comments by STIGYFishh")
                 
-                embed.add_field(name=url, value=embed_text)
+                fields = 0
+                char_count = 0
 
-            await self.bot.say(embed=embed)
+                for url in good_comments.keys():
+                    embed_text = ""
+                    for votes, comment in good_comments[url].items():
+                        if (char_count + (len(votes) + len(comment))) < 2000 and fields < 25:
+                            embed_text += "{}: {}\n".format(votes, comment)
+                        else:
+                            embed.add_field(name=url, value=embed_text)
+                            await self.bot.say(embed=embed)
+                            return
+                    
+                    embed.add_field(name=url, value=embed_text)
+                    fields += 1
+
+                await self.bot.say(embed=embed)
+                
+            await create_embed(good_comments)
                 
         async def get_good_comments(url, max_comments, good_comments, votes_threshold):
-            async with aiohttp.get(url) as page:
-                soup = BeautifulSoup(await page.text(), "html5lib")
+            async with aiohttp.get(url) as response:
+                soup = BeautifulSoup(await response.text(), "html5lib")
+                response.close()
                 
-                good_comments[url] = {}
-                comments = 0
+            good_comments[url] = {}
+            comments = 0
+            
+            for comment_block in soup.findAll("div", {"class" : "commentMessage"}):
+                comment = comment_block.findAll("span")[0]
+                vote_count = comment_block.find("span", {"class": "voteTotal"})
                 
-                for comment_block in soup.findAll("div", {"class" : "commentMessage"}):
-                    comment = comment_block.findAll("span")[0]
-                    vote_count = comment_block.find("span", {"class": "voteTotal"})
-                    
 
-                    if int(vote_count.text) > votes_threshold and comments < max_comments:
-                        good_comments[url].update({vote_count.text: comment.text})
-                        comments += 1
-                
-                if not good_comments[url]:
-                    del good_comments[url]
-                
-                page_links = await get_links(await page.text())
+                if int(vote_count.text) > votes_threshold and comments < max_comments:
+                    good_comments[url].update({vote_count.text: comment.text})
+                    comments += 1
+            
+            if not good_comments[url]:
+                del good_comments[url]
+            
+            page_links = await get_links(await page.text())
                 
             return page_links, good_comments, comments
 
