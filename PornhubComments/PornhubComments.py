@@ -73,8 +73,10 @@ class PornhubComments:
                 
         async def get_good_comments(url, max_comments, good_comments, votes_threshold):
             async with aiohttp.get(url) as response:
-                soup = BeautifulSoup(await response.text(), "html5lib")
+                page = response.text()
                 response.close()
+           
+            soup = BeautifulSoup(await page, "html5lib")
                 
             good_comments[url] = {}
             comments = 0
@@ -91,7 +93,7 @@ class PornhubComments:
             if not good_comments[url]:
                 del good_comments[url]
             
-            page_links = await get_links(await page.text())
+            page_links = await get_links(await page)
                 
             return page_links, good_comments, comments
 
