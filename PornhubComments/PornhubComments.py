@@ -15,7 +15,7 @@ class PornhubComments:
 
     @commands.command(name="phcomments", aliases=["phc"])
     async def pornhubcomments(self, max_comments: int, max_pages: int, vote_threshold: int, entry_url="https://www.pornhub.com/"):
-        """ Takes max comments,pages,like threshold and entry point e.g. !phc 50 10 100 https://www.pornhub.com/view_video.php?viewkey=1009739450"""
+        """ Takes max comments,pages and like threshold e.g. !phc 50 10 100 """
         async def crawl(max_comments=max_comments, max_pages=max_pages, votes_threshold=vote_threshold):
             explored_pages = []
             page_links = []
@@ -57,7 +57,6 @@ class PornhubComments:
                     embed_text = ""
                     for votes, comment in good_comments[url].items():
                         if (char_count + (len(votes) + len(comment))) < 2000 and fields < 25:
-                            char_count += (len(votes) + len(comment))
                             embed_text += "{}: {}\n".format(votes, comment)
                         else:
                             embed.add_field(name=url, value=embed_text)
@@ -70,14 +69,12 @@ class PornhubComments:
                 await self.bot.say(embed=embed)
                 
             await create_embed(good_comments)
-                
+
         async def get_good_comments(url, max_comments, good_comments, votes_threshold):
-            async with aiohttp.get(url) as response:
-                page = response.text()
-                response.close()
-           
-            soup = BeautifulSoup(await page, "html5lib")
-                
+            async with aiohttp.get(url) as page:
+                soup = BeautifulSoup(await page.text(), "html5lib")
+                page.close()
+
             good_comments[url] = {}
             comments = 0
             
@@ -93,7 +90,7 @@ class PornhubComments:
             if not good_comments[url]:
                 del good_comments[url]
             
-            page_links = await get_links(await page)
+            page_links = await get_links(await page.text())
                 
             return page_links, good_comments, comments
 
